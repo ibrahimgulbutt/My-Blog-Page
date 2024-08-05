@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('bootstrap.static', filename='css/bootstrap.min.css') }}">
+    <script src="{{ url_for('bootstrap.static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    {% block styles %}
+    <style>
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-img-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: black;
+        }
+
+        .card-body {
+            padding: 1rem;
+            /* Standard padding for card content */
+            margin: 0;
+            /* Remove any default margin */
+            background-color: #f8f9fa;
+            /* Light background color */
+            border: 1px solid #dee2e6;
+            /* Border color for the card */
+            border-radius: .375rem;
+            /* Rounded corners */
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            /* Light shadow for depth */
+        }
+
+        .user-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .green-dot {
+            height: 10px;
+            width: 10px;
+            background-color: green;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        
+        .nav-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-buttons a {
+            margin-bottom: 5px;
+        }
+    </style>
+    {% endblock %}
+</head>
+
+<body style="background-color: blanchedalmond;">
+    <header data-jarallax="" data-speed=".8"
+        style="background-image: url('../static/forest.jpg'); position: relative; z-index: 0;"
+        data-jarallax-original-styles="background-image: url(assets/img/1.jpg)">
+        <div class="d-flex flex-column min-vh-100 bg-black bg-opacity-50 pt-10 pt-md-8 pb-7 pb-md-0">
+            <div class="container my-auto">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-6 text-center" >
+                        <div class="nav-buttons" >
+                            <a href="{{ url_for('home') }}"
+                                class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">Home</a>
+                            <a href="{{ url_for('add_post') }}"
+                                class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">Add New</a>
+                            <a href="{{ url_for('about') }}"
+                                class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">About</a>
+                            {% if current_user.is_authenticated %}
+                                <a href="{{ url_for('logout') }}"
+                                    class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">Logout</a>
+                                <a href="{{ url_for('my_blogs') }}"
+                                    class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">My Blogs</a>
+                                <a href="{{ url_for('my_comments') }}"
+                                    class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">My Comments</a>
+                            {% else %}
+                                <a href="{{ url_for('login') }}"
+                                    class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">Login</a>
+                                <a href="{{ url_for('register') }}"
+                                    class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0">Register</a>
+                            {% endif %}
+                        </div>
+                        {% if current_user.is_authenticated %}
+                            <div class="user-info">
+                                <span class="green-dot"></span> {{ current_user.username }}
+                            </div>
+                        {% endif %}
+                        <h1 class="display-1 text-white mb-4">IBRAHIM GUL BUTT BLOG POST</h1>
+                        <hr style="border: 2px solid white; margin: 20px 0;">
+                        <p class="text-center text-white text-opacity-75 mb-7" style="font-size: 40px;">
+                            {{ page_info }}
+                        </p>
+                        <a class="btn btn-outline-primary text-white text-primary-hover mb-7 mb-md-0" href="#reservation">{{ button_text }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container mt-5">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="text-center py-4">
+        <p>&copy; 2024 Blog Post. All rights reserved.</p>
+    </footer>
+    {% block scripts %}
+    <!-- Additional scripts can be included here -->
+    {% endblock %}
+</body>
+
+</html>

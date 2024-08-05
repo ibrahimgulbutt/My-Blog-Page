@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Post{% endblock %}
+
+{% block content %}
+<h1 class="my-4" id="reservation">Create New Blog Post</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.subtitle.label(class="form-label") }}
+        {{ form.subtitle(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.img_url.label(class="form-label") }}
+        {{ form.img_url(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.date.label(class="form-label") }}
+        {{ form.date(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.body.label(class="form-label") }}
+        {{ form.body(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name=form.body.name) }}
+{% endblock %}

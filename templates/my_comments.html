@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}My Comments{% endblock %}
+
+{% block content %}
+    <h2 id="reservation">My Comments</h2>
+    {% if comments %}
+        <div class="list-group">
+            {% for comment in comments %}
+                <div class="list-group-item">
+                    <h5 class="mb-1">Comment on: {{ comment.blog_post.title }}</h5>
+                    <p class="mb-1">{{ comment.text }}</p>
+                    <small>Posted on: {{ comment.date }}</small>
+                    <div class="text-end">
+                        <a href="{{ url_for('post', post_id=comment.post_id) }}" class="btn btn-primary mt-2">View Blog Post</a>
+                      </div>
+                      
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have not made any comments yet.</p>
+    {% endif %}
+{% endblock %}

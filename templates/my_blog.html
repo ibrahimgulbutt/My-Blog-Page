@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}My Blogs{% endblock %}
+
+{% block content %}
+    <h2 id="reservation">My Blogs</h2>
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ post.img_url }}" class="card-img-top" alt="Blog Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.subtitle }}</p>
+                            <a href="{{ url_for('post', post_id=post.id) }}" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have not written any blogs yet.</p>
+    {% endif %}
+{% endblock %}
