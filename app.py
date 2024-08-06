@@ -43,10 +43,11 @@ class BlogPost(db.Model):
     img_url = db.Column(db.String(250), nullable=False)
     
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
-    comments = db.relationship('Comment', backref='blog_post', lazy=True)  # 'blog_post' as backref name
+    comments = db.relationship('Comment', backref='blog_post', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<BlogPost {self.title}>'
+
 
 
 
@@ -157,6 +158,38 @@ def edit_post(post_id):
         flash('Blog post updated successfully!', 'success')
         return redirect(url_for('post', post_id=post.id))
     return render_template('edit.html', form=form, post=post, button_text='Update Post', page_info='Edit a blog Page')
+
+@app.route('/delete/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = BlogPost.query.get_or_404(post_id)
+    if post.author != current_user:
+        flash('You are not authorized to delete this post.', 'danger')
+        return redirect(url_for('home'))
+    
+    # Delete associated comments manually
+    Comment.query.filter_by(post_id=post_id).delete()
+    
+    # Delete the blog post
+    db.session.delete(post)
+    db.session.commit()
+    
+    flash('Blog post and associated comments deleted successfully!', 'success')
+    return redirect(url_for('home'))
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        flash('You are not authorized to delete this comment.', 'danger')
+        return redirect(url_for('post', post_id=comment.post_id))
+    
+    db.session.delete(comment)
+    db.session.commit()
+    
+    flash('Comment deleted successfully!', 'success')
+    return redirect(url_for('post', post_id=comment.post_id))
 
 
 @app.route('/my_blogs')
